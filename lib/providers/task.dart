@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 final List<Task> dummyTaskList = [
   Task(
@@ -27,20 +28,34 @@ enum TaskPriority {
   high,
 }
 
+const uuid = Uuid();
+
 class Task {
   late String id;
   final String title;
   final String description;
   final DateTime dueDate;
   final TaskPriority priority;
+  final bool done;
 
-  Task({required this.title, required this.description, required this.dueDate, required this.priority}) {
-    id = "1";
+  Task({String? id, required this.title, required this.description, required this.dueDate, required this.priority, this.done = false}) {
+    this.id = id ?? uuid.v4();
   }
 
   @override
   String toString() {
     return 'Product{title: $title, due date: $dueDate, priority: $priority, description: $description}';
+  }
+
+  Task copyWith({String? title, String? description, DateTime? dueDate, TaskPriority? priority, bool? done}) {
+    return Task(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      dueDate: dueDate ?? this.dueDate,
+      priority: priority ?? this.priority,
+      done: done ?? this.done,
+    );
   }
 }
 
@@ -54,11 +69,12 @@ class TaskList extends Notifier<List<Task>> {
     state = [...state, task];
   }
 
-  void fetchTasks() async {
-
-  }
+  void editTask(Task editedTask) => state = state.map((previousTask) => editedTask.id == previousTask.id ? editedTask : previousTask).toList();
 
   void removeTask(String id) => state = state.where((task) => task.id != id).toList();
+
+  void toggleTask(bool done, String id) => state = state.map((task) => id == task.id ? task.copyWith(done: done) : task).toList();
+  
 }
 
 final taskListProvider = NotifierProvider<TaskList, List<Task>>(TaskList.new);
