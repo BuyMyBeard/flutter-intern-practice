@@ -1,13 +1,15 @@
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:task_manager/providers/auth_providers.dart';
 import 'package:task_manager/providers/task.dart';
 import 'package:task_manager/widgets/task_screen.dart';
 
 class Home extends ConsumerWidget {
   const Home({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final providers = ref.watch(authProviders);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -22,10 +24,17 @@ class Home extends ConsumerWidget {
             ],
           )
         ),
-        body: const TabBarView(children: [
-          TaskScreen(),
-          Text("B"),
-          Text("C"),
+        body: TabBarView(children: [
+          const TaskScreen(),
+          ProfileScreen(
+            providers: providers,
+            actions: [
+              SignedOutAction((context) {
+                Navigator.pushReplacementNamed(context, '/sign-in');
+              }),
+            ],
+          ),
+          const Text("C"),
         ])
       ),
     );
