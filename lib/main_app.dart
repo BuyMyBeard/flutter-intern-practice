@@ -11,10 +11,10 @@ class MainApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 3, 
+        length: 3,
         child: Scaffold(
           floatingActionButton: FloatingActionButton(onPressed: () => ref.read(taskListProvider.notifier).addTask(Task(title: "A", description: "B", dueDate: DateTime(1998), priority: TaskPriority.high))),
-          appBar: AppBar (
+          appBar: AppBar(
             title: const Text("Tasks"),
             bottom: const TabBar(
               tabs:[

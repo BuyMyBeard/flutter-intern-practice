@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final List<Task> dummyTaskList = [
   Task(
@@ -28,12 +29,15 @@ enum TaskPriority {
 }
 
 class Task {
+  late String id;
   final String title;
   final String description;
   final DateTime dueDate;
   final TaskPriority priority;
 
-  const Task({required this.title, required this.description, required this.dueDate, required this.priority});
+  Task({required this.title, required this.description, required this.dueDate, required this.priority}) {
+    id = "1";
+  }
 
   @override
   String toString() {
@@ -47,9 +51,15 @@ class TaskList extends Notifier<List<Task>> {
   List<Task> build() => dummyTaskList;
   
   
-  void addTask(Task task) {
+  void addTask(Task task) async {
     state = [...state, task];
   }
+
+  void fetchTasks() async {
+
+  }
+
+  void removeTask(String id) => state = state.where((task) => task.id != id).toList();
 }
 
 final taskListProvider = NotifierProvider<TaskList, List<Task>>(TaskList.new);
