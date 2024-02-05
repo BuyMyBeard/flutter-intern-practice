@@ -13,7 +13,17 @@ class Home extends ConsumerWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () => ref.read(taskListProvider.notifier).addTask(Task(title: "A", description: "B", dueDate: DateTime(1998), priority: TaskPriority.high))),
+        floatingActionButton: FloatingActionButton.extended(
+          label: const Row( 
+            children: 
+            [
+              Icon(Icons.add), 
+              SizedBox(width: 8),
+              Text('Add Task'),
+            ],
+          ), 
+          onPressed: () => ref.read(taskListProvider.notifier).addTask(Task(title: "A", description: "B", dueDate: DateTime(1998), priority: TaskPriority.high))
+        ),
         appBar: AppBar(
           title: const Text("Tasks"),
           bottom: const TabBar(
