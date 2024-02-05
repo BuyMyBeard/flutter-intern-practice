@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:task_manager/providers/form_data.dart';
 import 'package:task_manager/providers/task.dart';
 enum TaskAction { add, edit }
@@ -20,8 +19,9 @@ class TaskForm extends ConsumerStatefulWidget {
 }
 
 class _TaskFormState extends ConsumerState<TaskForm> {
-  final TextEditingController titleController = TextEditingController(text: '');
-  final TextEditingController descriptionController = TextEditingController(text: '');
+  final TextEditingController _titleController = TextEditingController(text: '');
+  final TextEditingController _descriptionController = TextEditingController(text: '');
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,52 +29,66 @@ class _TaskFormState extends ConsumerState<TaskForm> {
         title: Text(widget.formTitle),
         
       ),
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(
-                border:OutlineInputBorder(),
-                labelText: 'Title',
+      body: Form(
+        key: _formKey,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              TextFormField(   
+                maxLength: 40,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a title';
+                  }
+                  return null;
+                },
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  border:OutlineInputBorder(),
+                  labelText: 'Title',
+                ),
               ),
-            ),
-            const SizedBox(height:20),
-            TextField(
-              controller: descriptionController,
-              keyboardType: TextInputType.multiline,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Description',
+              const SizedBox(height:20),
+              TextFormField(
+                controller: _descriptionController,
+                keyboardType: TextInputType.multiline,
+                maxLength: 200,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Description',
+                ),
               ),
-            ),
-            const SizedBox(height:20),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Priority', style: TextStyle(fontSize: 16)),
-                PriorityButtons(),
-              ],
-            ),
-            const SizedBox(height:20),
-            const DatePicker(),
-            const SizedBox(height:50),
-            FilledButton(
-              onPressed: () => _submitForm(context, ref), 
-              child: Text(widget.formSubmit),
-              
-            ),
-          ],
+              const SizedBox(height:20),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text('Priority', style: TextStyle(fontSize: 16)),
+                  PriorityButtons(),
+                ],
+              ),
+              const SizedBox(height:20),
+              const DatePicker(),
+              const SizedBox(height:50),
+              FilledButton(
+                onPressed: () => _submitForm(context, ref), 
+                child: Text(widget.formSubmit),
+                
+              ),
+            ],
+          )
         )
       )
     );
   }
 
   _submitForm(BuildContext context, WidgetRef ref) {
-    String title = titleController.text;
-    String description = descriptionController.text;
+    if(!_formKey.currentState!.validate()) {
+      return;
+    }
+    String title = _titleController.text;
+    String description = _descriptionController.text;
     TaskPriority priority = ref.read(priorityInputProvider);
     DateTime dueDate = ref.read(dateInputProvider);
 
@@ -127,11 +141,17 @@ class DatePicker extends ConsumerStatefulWidget {
 }
 
 class _DatePickerState extends ConsumerState<DatePicker> {
-  DateTime pickedDate = DateTime(0);
+  DateTime pickedDate = DateTime.now();
   final TextEditingController controller = TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter a date';
+        }
+        return null;
+      },
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         labelText: 'Due Date',

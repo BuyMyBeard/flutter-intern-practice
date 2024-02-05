@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:task_manager/providers/task.dart';
 import 'package:task_manager/constants/color_palette.dart' as colors;
 import 'package:task_manager/widgets/task_form.dart';
