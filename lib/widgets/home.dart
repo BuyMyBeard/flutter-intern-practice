@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/providers/auth_providers.dart';
 import 'package:task_manager/providers/task.dart';
+import 'package:task_manager/widgets/task_form.dart';
 import 'package:task_manager/widgets/task_screen.dart';
 
 class Home extends ConsumerWidget {
@@ -22,7 +23,7 @@ class Home extends ConsumerWidget {
               Text('Add Task'),
             ],
           ), 
-          onPressed: () => ref.read(taskListProvider.notifier).addTask(Task(title: "A", description: "B", dueDate: DateTime(1998), priority: TaskPriority.high))
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TaskForm(action: TaskAction.add)))
         ),
         appBar: AppBar(
           title: const Text("Tasks"),

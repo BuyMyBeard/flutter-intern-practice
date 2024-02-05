@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:task_manager/providers/task.dart';
 import 'package:task_manager/constants/color_palette.dart' as colors;
+import 'package:task_manager/widgets/task_form.dart';
 import 'package:task_manager/widgets/task_info.dart';
 
 class TaskScreen extends ConsumerWidget {
@@ -30,9 +31,9 @@ class TaskContainer extends StatelessWidget {
   
   Color get priorityColor {
     return switch(task.priority) {
-      TaskPriority.high => colors.danger,
-      TaskPriority.medium => colors.warning,
-      TaskPriority.low => colors.success,
+      TaskPriority.high => colors.dangerDark,
+      TaskPriority.medium => colors.warningDark,
+      TaskPriority.low => colors.successDark,
     };
   }
   Color get priorityLightColor {
@@ -86,13 +87,13 @@ class TaskContainer extends StatelessWidget {
                     softWrap: true,
                   
                   ),
-                  Text(DateFormat. yMd('fr_CA').format(task.dueDate)),
+                  Text(DateFormat.yMd('fr_CA').format(task.dueDate)),
                 ],
               ),
             ),
             IconButton(
               icon: const Icon(Icons.edit), 
-              onPressed: () => Logger().log(Level.info, "Edit"),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TaskForm(task: task, action: TaskAction.edit))),
               iconSize: 35,
             ),
             IconButton(
