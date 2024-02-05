@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:task_manager/providers/form_data.dart';
 import 'package:task_manager/providers/task.dart';
 enum TaskAction { add, edit }
 
@@ -19,7 +20,8 @@ class TaskForm extends ConsumerStatefulWidget {
 }
 
 class _TaskFormState extends ConsumerState<TaskForm> {
-
+  final TextEditingController titleController = TextEditingController(text: '');
+  final TextEditingController descriptionController = TextEditingController(text: '');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,17 +33,19 @@ class _TaskFormState extends ConsumerState<TaskForm> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
                 border:OutlineInputBorder(),
                 labelText: 'Title',
               ),
             ),
             const SizedBox(height:20),
-            const TextField(
+            TextField(
+              controller: descriptionController,
               keyboardType: TextInputType.multiline,
               maxLines: 3,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Description',
               ),
@@ -58,7 +62,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
             const DatePicker(),
             const SizedBox(height:50),
             FilledButton(
-              onPressed: () => Logger().log(Level.info, "Form submitted"), 
+              onPressed: () => _submitForm(context, ref), 
               child: Text(widget.formSubmit),
               
             ),
@@ -67,16 +71,27 @@ class _TaskFormState extends ConsumerState<TaskForm> {
       )
     );
   }
+
+  _submitForm(BuildContext context, WidgetRef ref) {
+    String title = titleController.text;
+    String description = descriptionController.text;
+    TaskPriority priority = ref.read(priorityInputProvider);
+    DateTime dueDate = ref.read(dateInputProvider);
+
+    Task task = Task(title: title, description: description, priority: priority, dueDate: dueDate);
+    ref.read(taskListProvider.notifier).addTask(task);
+    Navigator.pop(context);
+  }
 }
 
-class PriorityButtons extends StatefulWidget {
+class PriorityButtons extends ConsumerStatefulWidget {
   const PriorityButtons({super.key});
 
   @override
-  State<PriorityButtons> createState() => _PriorityButtonsState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PriorityButtonsState();
 }
 
-class _PriorityButtonsState extends State<PriorityButtons> {
+class _PriorityButtonsState extends ConsumerState<PriorityButtons> {
   TaskPriority selected = TaskPriority.medium;
   @override
   Widget build(BuildContext context) {
@@ -98,19 +113,20 @@ class _PriorityButtonsState extends State<PriorityButtons> {
       selected: <TaskPriority>{selected},
       onSelectionChanged: (Set<TaskPriority> newSelection) {
         setState(() => selected = newSelection.first);
+        ref.read(priorityInputProvider.notifier).state = selected;
       },
     );
   }
 }
 
-class DatePicker extends StatefulWidget {
+class DatePicker extends ConsumerStatefulWidget {
   const DatePicker({super.key});
-
+  
   @override
-  State<DatePicker> createState() => _DatePickerState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DatePickerState();
 }
 
-class _DatePickerState extends State<DatePicker> {
+class _DatePickerState extends ConsumerState<DatePicker> {
   DateTime pickedDate = DateTime(0);
   final TextEditingController controller = TextEditingController(text: '');
   @override
@@ -128,6 +144,7 @@ class _DatePickerState extends State<DatePicker> {
           setState(() {
             pickedDate = date;
             controller.text = DateFormat.yMd('fr_CA').format(pickedDate);
+            ref.read(dateInputProvider.notifier).state = date;
           });
         }
       }
