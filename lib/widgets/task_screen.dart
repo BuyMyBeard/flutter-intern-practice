@@ -26,7 +26,7 @@ class TaskScreen extends ConsumerWidget {
 }
 
 
-class TaskContainer extends StatelessWidget {
+class TaskContainer extends ConsumerWidget {
   final Task task;
   
   Color get priorityColor {
@@ -46,7 +46,7 @@ class TaskContainer extends StatelessWidget {
   const TaskContainer(this.task, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => Navigator.of(context).push(TaskInfo<void>(task)),
       child: Container(
@@ -74,8 +74,6 @@ class TaskContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children : [
-
-                    
                   Text(
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -85,7 +83,6 @@ class TaskContainer extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
-                  
                   ),
                   Text(DateFormat.yMd('fr_CA').format(task.dueDate)),
                 ],
@@ -93,12 +90,14 @@ class TaskContainer extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.edit), 
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TaskForm(task: task, action: TaskAction.edit))),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(
+                builder: (context) => TaskForm(task: task, action: TaskAction.edit)
+              )),
               iconSize: 35,
             ),
             IconButton(
               icon: const Icon(Icons.delete), 
-              onPressed: () => Logger().log(Level.info, "Delete"),
+              onPressed: () => _showDeleteDialog(task, context, ref),
               iconSize: 35,
             ),
           ],
@@ -106,6 +105,37 @@ class TaskContainer extends StatelessWidget {
       ),
 
     );
+  }
+
+  Future<void> _showDeleteDialog(Task task, BuildContext context, WidgetRef ref) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                const Text('Are you sure you want to delete this task?'),
+                Text(task.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                ref.read(taskListProvider.notifier).removeTask(task.id);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ); 
+      });
   }
 }
 
