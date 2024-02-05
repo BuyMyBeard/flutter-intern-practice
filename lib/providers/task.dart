@@ -20,6 +20,12 @@ final List<Task> dummyTaskList = [
     priority: TaskPriority.low,
     dueDate: DateTime(2024, 10, 30),
   ),
+  Task(
+    title: "aaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 
+    description: "Talk with my friend I haven't seen in foreverllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+    priority: TaskPriority.low,
+    dueDate: DateTime(2024, 10, 30),
+  ),
 ];
 
 enum TaskPriority {

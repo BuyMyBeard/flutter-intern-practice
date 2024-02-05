@@ -4,9 +4,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_manager/firebase_options.dart';
 import 'package:task_manager/widgets/main_app.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 
 void main() async {
+  await initializeDateFormatting('fr_CA', null);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseUIAuth.configureProviders([

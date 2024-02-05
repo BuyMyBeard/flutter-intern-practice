@@ -6,7 +6,6 @@ import 'package:task_manager/providers/auth_providers.dart';
 import 'package:task_manager/widgets/home.dart';
 
 
-
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
