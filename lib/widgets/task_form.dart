@@ -5,10 +5,19 @@ import 'package:task_manager/providers/form_data.dart';
 import 'package:task_manager/providers/task.dart';
 enum TaskAction { add, edit }
 
+/// Task Form to add or edit a task.
+/// 
+/// Must be instanciated by pusing it into [Navigator] as a [MaterialPageRoute].
 class TaskForm extends ConsumerStatefulWidget {
   final Task? task;
   final TaskAction action;
-  
+  /// Create a task form widget.
+  /// 
+  /// Make sure to call it by pushing it into the [Navigator] as a [MaterialPageRoute].
+  /// 
+  /// If [action] is [TaskAction.edit], make sure to provide the [task] to edit.
+  /// 
+  /// If the [action] is [TaskAction.add], the [task] will be ignored
   const TaskForm({required this.action, this.task, super.key});
   
   String get formTitle => action == TaskAction.add ? "New Task" : "Edit Task";
@@ -22,6 +31,28 @@ class _TaskFormState extends ConsumerState<TaskForm> {
   final TextEditingController _titleController = TextEditingController(text: '');
   final TextEditingController _descriptionController = TextEditingController(text: '');
   final _formKey = GlobalKey<FormState>();
+  late DateTime _dateInitVal = DateTime(0);
+  late TaskPriority _priorityInitVal = TaskPriority.medium;
+
+  @override
+  void initState() {
+    if (widget.action == TaskAction.edit) {
+      if (widget.task == null) {
+        throw Exception('''Task form instanciated with action TaskAction.edit, but did not provide a task to edit. \n 
+        Please provide a task in the constructor''');
+      }
+
+      _titleController.text = widget.task!.title;
+      _descriptionController.text = widget.task!.description;
+      _dateInitVal = widget.task!.dueDate;
+      _priorityInitVal = widget.task!.priority;
+    } else {
+      _dateInitVal = DateTime(0);
+      _priorityInitVal = TaskPriority.medium;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,52 +62,54 @@ class _TaskFormState extends ConsumerState<TaskForm> {
       ),
       body: Form(
         key: _formKey,
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              TextFormField(   
-                maxLength: 40,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  border:OutlineInputBorder(),
-                  labelText: 'Title',
+          child: SingleChildScrollView( 
+            child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                TextFormField(   
+                  maxLength: 40,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    border:OutlineInputBorder(),
+                    labelText: 'Title',
+                  ),
                 ),
-              ),
-              const SizedBox(height:20),
-              TextFormField(
-                controller: _descriptionController,
-                keyboardType: TextInputType.multiline,
-                maxLength: 200,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Description',
+                const SizedBox(height:20),
+                TextFormField(
+                  controller: _descriptionController,
+                  keyboardType: TextInputType.multiline,
+                  maxLength: 200,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Description',
+                  ),
                 ),
-              ),
-              const SizedBox(height:20),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text('Priority', style: TextStyle(fontSize: 16)),
-                  PriorityButtons(),
-                ],
-              ),
-              const SizedBox(height:20),
-              const DatePicker(),
-              const SizedBox(height:50),
-              FilledButton(
-                onPressed: () => _submitForm(context, ref), 
-                child: Text(widget.formSubmit),
-                
-              ),
-            ],
+                const SizedBox(height:20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text('Priority', style: TextStyle(fontSize: 16)),
+                    PriorityButtons(_priorityInitVal),
+                  ],
+                ),
+                const SizedBox(height:20),
+                DatePicker(_dateInitVal),
+                const SizedBox(height:50),
+                FilledButton(
+                  onPressed: () => _submitForm(context, ref), 
+                  child: Text(widget.formSubmit),
+                  
+                ),
+              ],
+            )
           )
         )
       )
@@ -92,21 +125,35 @@ class _TaskFormState extends ConsumerState<TaskForm> {
     TaskPriority priority = ref.read(priorityInputProvider);
     DateTime dueDate = ref.read(dateInputProvider);
 
-    Task task = Task(title: title, description: description, priority: priority, dueDate: dueDate);
-    ref.read(taskListProvider.notifier).addTask(task);
+    if (widget.action == TaskAction.add) {
+      Task task = Task(title: title, description: description, priority: priority, dueDate: dueDate);
+      ref.read(taskListProvider.notifier).addTask(task);
+    } else {
+      Task task = widget.task!.copyWith(title: title, description: description, dueDate: dueDate, priority: priority, done: widget.task!.done);
+      ref.read(taskListProvider.notifier).editTask(task);
+    }
     Navigator.pop(context);
   }
 }
 
+/// [SegmentedButton] used in [TaskForm]
 class PriorityButtons extends ConsumerStatefulWidget {
-  const PriorityButtons({super.key});
+  final TaskPriority initialValue;
+
+  const PriorityButtons(this.initialValue, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PriorityButtonsState();
 }
 
 class _PriorityButtonsState extends ConsumerState<PriorityButtons> {
-  TaskPriority selected = TaskPriority.medium;
+  TaskPriority _selected = TaskPriority.medium;
+
+  @override
+  void initState() {
+    _selected = widget.initialValue;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SegmentedButton<TaskPriority>(
@@ -124,17 +171,20 @@ class _PriorityButtonsState extends ConsumerState<PriorityButtons> {
           label: Text("High")
         ),
       ], 
-      selected: <TaskPriority>{selected},
+      selected: <TaskPriority>{_selected},
       onSelectionChanged: (Set<TaskPriority> newSelection) {
-        setState(() => selected = newSelection.first);
-        ref.read(priorityInputProvider.notifier).state = selected;
+        setState(() => _selected = newSelection.first);
+        ref.read(priorityInputProvider.notifier).state = _selected;
       },
     );
   }
 }
 
+/// [showDatePicker] bound by a readonly [TextFormField] used in [TaskForm]
 class DatePicker extends ConsumerStatefulWidget {
-  const DatePicker({super.key});
+  final DateTime initialValue;
+
+  const DatePicker(this.initialValue, {super.key});
   
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DatePickerState();
@@ -143,6 +193,20 @@ class DatePicker extends ConsumerStatefulWidget {
 class _DatePickerState extends ConsumerState<DatePicker> {
   DateTime pickedDate = DateTime.now();
   final TextEditingController controller = TextEditingController(text: '');
+
+  set textFieldDate(DateTime date) {
+    controller.text = DateFormat.yMd('fr_CA').format(pickedDate);
+  }
+
+  @override
+  void initState() {
+    pickedDate = widget.initialValue;
+    if (pickedDate != DateTime(0)) {
+      textFieldDate = pickedDate;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -163,7 +227,7 @@ class _DatePickerState extends ConsumerState<DatePicker> {
         if (date != null) {
           setState(() {
             pickedDate = date;
-            controller.text = DateFormat.yMd('fr_CA').format(pickedDate);
+            textFieldDate = pickedDate;
             ref.read(dateInputProvider.notifier).state = date;
           });
         }
