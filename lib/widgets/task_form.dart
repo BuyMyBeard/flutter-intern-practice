@@ -129,7 +129,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
       Task task = Task(title: title, description: description, priority: priority, dueDate: dueDate);
       ref.read(taskListProvider.notifier).addTask(task);
     } else {
-      Task task = widget.task!.copyWith(title: title, description: description, dueDate: dueDate, priority: priority, done: widget.task!.done);
+      Task task = widget.task!.copyWith(title: title, description: description, dueDate: dueDate, priority: priority);
       ref.read(taskListProvider.notifier).editTask(task);
     }
     Navigator.pop(context);
