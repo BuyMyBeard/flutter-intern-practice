@@ -84,26 +84,26 @@ git checkout -b feature/YourFeatureName
 
 ### 1.  Splash Screen (Optional)
 - Display the application logo.
-- Transition to either the Home Screen or Authentication Screen, depending on the user's login status.
+- ~~Transition to either the Home Screen or Authentication Screen, depending on the user's login status.~~
 
-### 2. Authentication Screen
+### 2. ~~Authentication Screen~~
 
 - Features:
-    - Email and password-based registration.
-    - Email and password-based login.
-    - Password reset option.
-- Firebase Integration: Use Firebase Authentication.
+    - ~~Email and password-based registration.~~
+    - ~~Email and password-based login.~~
+    - ~~Password reset option.~~
+- ~~Firebase Integration: Use Firebase Authentication.~~
 
 ### 3. Home/Dashboard Screen
 - Features:
-    - Display a list of tasks.
-    - Options to view, edit, or delete existing tasks.
-    - Button to add a new task.
+    - ~~Display a list of tasks.~~
+    - ~~Options to view, edit, or delete existing tasks.~~
+    - ~~Button to add a new task.~~
 - Firebase Integration: Retrieve tasks from Firestore.
 
 ### 4. Task Creation/Editing Screen
 - Features:
-    - Form to enter/edit task details (title, description, due date, priority).
+    - ~~Form to enter/edit task details (title, description, due date, priority).~~
     - Option to set a reminder.
 - Firebase Integration: Add or update tasks in Firestore.
 
@@ -116,9 +116,9 @@ git checkout -b feature/YourFeatureName
 
 ### 6. Profile Screen
 - Features:
-    - Display user information.
-    - Option to log out.
-- Firebase Integration: Manage user session.
+    - ~~Display user information.~~
+    - ~~Option to log out.~~
+- ~~Firebase Integration: Manage user session.~~
 
 ### 7. Settings Screen (Optional)
 - Features:
