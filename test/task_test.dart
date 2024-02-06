@@ -88,10 +88,12 @@ void main() {
   
   // Had problems with trying to setup widget tests
 
-  // testWidgets('task add', (WidgetTester tester) async {
-  //   await tester.pumpWidget(const MaterialApp(home: TaskForm(action: TaskAction.add)));
+  testWidgets('task add', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: TaskForm(action: TaskAction.add)));
     
-  //   await tester.tap(find.text('Create new task'));
-  //   expect(find.textContaining('Please enter a'), findsExactly(2));
-  // });
+    await tester.tap(find.text('Create new task'));
+    await tester.pump(const Duration(milliseconds: 100));
+    Pattern pattern = RegExp(r'Please enter a');
+    expect(find.textContaining(pattern), findsExactly(2));
+  });
 }
