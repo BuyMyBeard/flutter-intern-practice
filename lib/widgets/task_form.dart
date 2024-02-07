@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:task_manager/providers/database.dart';
 import 'package:task_manager/providers/form_data.dart';
 import 'package:task_manager/providers/task.dart';
 enum TaskAction { add, edit }
@@ -127,10 +128,12 @@ class _TaskFormState extends ConsumerState<TaskForm> {
 
     if (widget.action == TaskAction.add) {
       Task task = Task(title: title, description: description, priority: priority, dueDate: dueDate);
-      ref.read(taskListProvider.notifier).addTask(task);
+      // ref.read(taskListProvider.notifier).addTask(task);
+      ref.read(databaseProvider).addTask(task);
     } else {
       Task task = widget.task!.copyWith(title: title, description: description, dueDate: dueDate, priority: priority);
-      ref.read(taskListProvider.notifier).editTask(task);
+      // ref.read(taskListProvider.notifier).editTask(task);
+      ref.read(databaseProvider).editTask(task);
     }
     Navigator.pop(context);
   }

@@ -6,17 +6,39 @@ import 'package:task_manager/providers/task.dart';
 class Database {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   
-  Stream<QuerySnapshot> tasks(User user) {
+  User get user => FirebaseAuth.instance.currentUser!;  
+
+  Stream<QuerySnapshot> tasks() {
     return _firestore.collection('Tasks').where("UID", isEqualTo: user.uid).snapshots();
   }
 
-  Future<bool> addTask(Task task, User user) async {
-    CollectionReference collectionRef = _firestore.collection('Tasks'); // referencing the movie collection .
+  Future<bool> addTask(Task task) async {
+    CollectionReference collectionRef = _firestore.collection('Tasks');
     try {
-      await collectionRef.add(task.toFirestore(user)); // Adding a new document to our movies collection
-      return true; // finally return true 
+      await collectionRef.add(task.toFirestore(user));
+      return true;
     } catch (e) {
-      return Future.error(e); // return error 
+      return Future.error(e);
+    }
+  }
+
+  Future<bool> removeTask(Task task) async {
+    CollectionReference collectionRef = _firestore.collection('Tasks');
+    try {
+      await collectionRef.doc(task.id).delete();
+      return true;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<bool> editTask(Task task) async {
+    CollectionReference collectionRef = _firestore.collection('Tasks');
+    try {
+      await collectionRef.doc(task.id).set(task.toFirestore(user));
+      return true;
+    } catch (e) {
+      return Future.error(e);
     }
   }
 }

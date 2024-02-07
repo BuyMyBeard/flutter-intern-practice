@@ -23,8 +23,7 @@ class Home extends ConsumerWidget {
               Text('Add Task'),
             ],
           ), 
-          // onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TaskForm(action: TaskAction.add)))
-          onPressed: () => getTasks(ref),
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TaskForm(action: TaskAction.add)))
         ),
         appBar: AppBar(
           title: const Text("Tasks"),

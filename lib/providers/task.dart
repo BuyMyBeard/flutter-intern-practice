@@ -50,9 +50,9 @@ class Task {
     this.id = id ?? uuid.v4();
   }
 
-  factory Task.fromFirestore(
-    Map<String, dynamic> data) {
+  factory Task.fromFirestore(String id, Map<String, dynamic> data) {
     return Task(
+      id: id,
       title: data['Title'],
       description: data['Description'],
       dueDate: (data['DueDate'] as Timestamp).toDate(),       
@@ -107,4 +107,3 @@ class TaskList extends Notifier<List<Task>> {
 }
 
 final taskListProvider = NotifierProvider<TaskList, List<Task>>(TaskList.new);
-

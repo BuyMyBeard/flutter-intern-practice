@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 import 'package:task_manager/providers/database.dart';
-import 'package:task_manager/providers/firebase_providers.dart';
 import 'package:task_manager/providers/task.dart';
 import 'package:task_manager/constants/color_palette.dart' as colors;
 import 'package:task_manager/widgets/task_form.dart';
@@ -17,8 +14,7 @@ class TaskScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final database = ref.watch(databaseProvider);
-    final user = FirebaseAuth.instance.currentUser!;
-    return StreamBuilder<QuerySnapshot>(stream: database.tasks(user), builder: ((BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    return StreamBuilder<QuerySnapshot>(stream: database.tasks(), builder: ((BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
       if (snapshot.hasError) {
         return const Center(child: Text('Error occured'));
       }
@@ -27,7 +23,7 @@ class TaskScreen extends ConsumerWidget {
       }
       var taskList = snapshot.data?.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-        return Task.fromFirestore(data);
+        return Task.fromFirestore(document.id, data);
       }).toList().cast();
 
       return ListView.separated(
@@ -145,7 +141,8 @@ class TaskContainer extends ConsumerWidget {
             TextButton(
               child: const Text('Confirm'),
               onPressed: () {
-                ref.read(taskListProvider.notifier).removeTask(task.id);
+                // ref.read(taskListProvider.notifier).removeTask(task.id);
+                ref.read(databaseProvider).removeTask(task);
                 Navigator.of(context).pop();
               },
             ),
