@@ -49,7 +49,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
       _priorityInitVal = widget.task!.priority;
     } else {
       _dateInitVal = DateTime(0);
-      _priorityInitVal = TaskPriority.medium;
+      _priorityInitVal = TaskPriority.low;
     }
     super.initState();
   }
@@ -150,7 +150,7 @@ class PriorityButtons extends ConsumerStatefulWidget {
 }
 
 class _PriorityButtonsState extends ConsumerState<PriorityButtons> {
-  TaskPriority _selected = TaskPriority.medium;
+  TaskPriority _selected = TaskPriority.low;
 
   @override
   void initState() {

@@ -6,4 +6,4 @@ import 'package:task_manager/widgets/task_form.dart';
 final dateInputProvider = StateProvider<DateTime>((ref) => DateTime.now());
 
 /// Used in [TaskForm] to keep the state of the priority input
-final priorityInputProvider = StateProvider<TaskPriority>((ref) => TaskPriority.medium);
+final priorityInputProvider = StateProvider<TaskPriority>((ref) => TaskPriority.low);
