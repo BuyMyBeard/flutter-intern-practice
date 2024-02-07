@@ -1,6 +1,7 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:task_manager/db/db_functions.dart';
 import 'package:task_manager/providers/auth_providers.dart';
 import 'package:task_manager/widgets/task_form.dart';
 import 'package:task_manager/widgets/task_screen.dart';
@@ -22,7 +23,8 @@ class Home extends ConsumerWidget {
               Text('Add Task'),
             ],
           ), 
-          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TaskForm(action: TaskAction.add)))
+          // onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const TaskForm(action: TaskAction.add)))
+          onPressed: () => getTasks(ref),
         ),
         appBar: AppBar(
           title: const Text("Tasks"),

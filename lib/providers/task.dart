@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -48,6 +50,27 @@ class Task {
     this.id = id ?? uuid.v4();
   }
 
+  factory Task.fromFirestore(
+    Map<String, dynamic> data) {
+    return Task(
+      title: data['Title'],
+      description: data['Description'],
+      dueDate: (data['DueDate'] as Timestamp).toDate(),       
+      priority: TaskPriority.values[data['Priority']],
+    );
+  }
+
+  Map<String, dynamic> toFirestore(User user) {
+    return {
+      "Title": title,
+      "Description": description,
+      "DueDate": Timestamp.fromDate(dueDate),
+      "Priority": priority.index,
+      "Done": done,
+      "UID": user.uid,
+    };
+  }
+
   @override
   String toString() {
     return 'Product{title: $title, due date: $dueDate, priority: $priority, description: $description}';
@@ -66,9 +89,9 @@ class Task {
 }
 
 class TaskList extends Notifier<List<Task>> {
-  
   @override
   List<Task> build() => dummyTaskList;
+  
   
   
   void addTask(Task task) async {
@@ -84,3 +107,4 @@ class TaskList extends Notifier<List<Task>> {
 }
 
 final taskListProvider = NotifierProvider<TaskList, List<Task>>(TaskList.new);
+

@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
+import 'package:task_manager/providers/database.dart';
+import 'package:task_manager/providers/firebase_providers.dart';
 import 'package:task_manager/providers/task.dart';
 import 'package:task_manager/constants/color_palette.dart' as colors;
 import 'package:task_manager/widgets/task_form.dart';
@@ -11,16 +16,28 @@ class TaskScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
-    final tasks = ref.watch(taskListProvider);
+    final database = ref.watch(databaseProvider);
+    final user = FirebaseAuth.instance.currentUser!;
+    return StreamBuilder<QuerySnapshot>(stream: database.tasks(user), builder: ((BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      if (snapshot.hasError) {
+        return const Center(child: Text('Error occured'));
+      }
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      var taskList = snapshot.data?.docs.map((DocumentSnapshot document) {
+        Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+        return Task.fromFirestore(data);
+      }).toList().cast();
 
-    return ListView.separated(
-      itemCount: tasks.length,
-      padding: const EdgeInsets.all(1),
-      physics: const BouncingScrollPhysics(),
-      separatorBuilder: (context, index) => const SizedBox(height: 1),
-      itemBuilder: (context, index) => TaskContainer(tasks[index]),
-    );    
+      return ListView.separated(
+        itemCount: taskList!.length,
+        padding: const EdgeInsets.all(1),
+        physics: const BouncingScrollPhysics(),
+        separatorBuilder: (context, index) => const SizedBox(height: 1),
+        itemBuilder: (context, index) => TaskContainer(taskList[index]),
+      );
+    }));
   }
 }
 
