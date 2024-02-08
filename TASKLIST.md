@@ -101,17 +101,17 @@ git checkout -b feature/YourFeatureName
     - ~~Button to add a new task.~~
 - ~~Firebase Integration: Retrieve tasks from Firestore.~~
 
-### 4. Task Creation/Editing Screen
-- Features:
+### 4. ~~Task Creation/Editing Screen~~
+- ~~Features:~~
     - ~~Form to enter/edit task details (title, description, due date, priority).~~
-    - Option to set a reminder.
+    - ~~Option to set a reminder.~~
 - ~~Firebase Integration: Add or update tasks in Firestore.~~
 
-### 5. Reminder Setup Screen
-- Features:
-    - Select date and time for the reminder.
-    - Option to repeat the reminder (e.g., daily, weekly).
-- Local Notifications: Implement local notifications for reminders.
+### 5. ~~Reminder Setup Screen~~
+- ~~Features:~~
+    - ~~Select date and time for the reminder.~~
+    - ~~Option to repeat the reminder (e.g., daily, weekly).~~
+- ~~Local Notifications: Implement local notifications for reminders.~~
 
 ### 6. ~~Profile Screen~~
 - ~~Features:~~
@@ -132,21 +132,21 @@ git checkout -b feature/YourFeatureName
 - ~~Use Firestore to store and manage tasks and user data.~~
 - ~~Implement real-time data synchronization. (No worries, it's in real time by default ;)~~
 
-### User Interface
-- Follow Material Design (for Android) or Cupertino Design (for iOS) principles. (Choose one)
-- Ensure responsive and intuitive UI/UX.
+### ~~User Interface~~
+- ~~Follow Material Design (for Android) or Cupertino Design (for iOS) principles. (Choose one)~~
+- ~~Ensure responsive and intuitive UI/UX.~~
 
-### Testing
-- Write unit tests for business logic.
-- Perform integration testing for Firebase services.
+### ~~Testing~~
+- ~~Write unit tests for business logic.~~
+- ~~Perform integration testing for Firebase services.~~
 
 ### Documentation(BONUS)
-- Document the codebase.
+- ~~Document the codebase.~~
 - Create a README file for GitHub repository.
 
-### Version Control
-- Use Git for version control.
-- Regular commits and descriptive commit messages.
+### ~~Version Control~~
+- ~~Use Git for version control.~~
+- ~~Regular commits and descriptive commit messages.~~
 
 ### Bonus Features (if time permits)
 - Implement task categorization or tagging.
