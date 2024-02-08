@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:task_manager/providers/database.dart';
 import 'package:task_manager/providers/form_data.dart';
 import 'package:task_manager/providers/task.dart';
+import 'package:task_manager/widgets/reminder.dart';
 enum TaskAction { add, edit }
 
 /// Task Form to add or edit a task.
@@ -104,6 +105,14 @@ class _TaskFormState extends ConsumerState<TaskForm> {
                 const SizedBox(height:20),
                 DatePicker(_dateInitVal),
                 const SizedBox(height:50),
+                IconButton(
+                  icon: const Icon(Icons.alarm_on), 
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => const ReminderForm()
+                  )),
+                  iconSize: 35,
+                ),
+                const SizedBox(height:30),
                 FilledButton(
                   onPressed: () => _submitForm(context, ref), 
                   child: Text(widget.formSubmit),
