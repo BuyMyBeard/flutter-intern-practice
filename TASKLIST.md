@@ -82,8 +82,8 @@ git checkout -b feature/YourFeatureName
 
 ## Pages and Key Features
 
-### 1.  Splash Screen (Optional)
-- Display the application logo.
+### 1. ~~Splash Screen (Optional)~~
+- ~~Display the application logo.~~
 - ~~Transition to either the Home Screen or Authentication Screen, depending on the user's login status.~~
 
 ### 2. ~~Authentication Screen~~
@@ -127,10 +127,10 @@ git checkout -b feature/YourFeatureName
 
 ## Additional Requirements
 
-### Data Management
+### ~~Data Management~~
 
-- Use Firestore to store and manage tasks and user data.
-- Implement real-time data synchronization. (No worries, it's in real time by default ;)
+- ~~Use Firestore to store and manage tasks and user data.~~
+- ~~Implement real-time data synchronization. (No worries, it's in real time by default ;)~~
 
 ### User Interface
 - Follow Material Design (for Android) or Cupertino Design (for iOS) principles. (Choose one)
