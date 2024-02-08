@@ -88,7 +88,7 @@ git checkout -b feature/YourFeatureName
 
 ### 2. ~~Authentication Screen~~
 
-- Features:
+- ~~Features:~~
     - ~~Email and password-based registration.~~
     - ~~Email and password-based login.~~
     - ~~Password reset option.~~
