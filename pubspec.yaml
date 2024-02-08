@@ -13,6 +13,7 @@ dependencies:
   firebase_ui_auth: ^1.12.1
   flutter:
     sdk: flutter
+  flutter_native_splash: ^2.3.10
   flutter_riverpod: ^2.4.9
   intl: ^0.18.1
   logger: ^2.0.2+1
@@ -32,3 +33,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_native_splash:
+  color: "#000000"
+  image: assets/devxpress-logo.png
+
+  android_12:
+    image: assets/devxpress-logo.png
+    color: "#000000"
