@@ -33,6 +33,7 @@ class _TaskFormState extends ConsumerState<TaskForm> {
   final TextEditingController _titleController = TextEditingController(text: '');
   final TextEditingController _descriptionController = TextEditingController(text: '');
   final _formKey = GlobalKey<FormState>();
+  Reminder? reminder;
   late DateTime _dateInitVal = DateTime(0);
   late TaskPriority _priorityInitVal = TaskPriority.medium;
 
@@ -107,9 +108,16 @@ class _TaskFormState extends ConsumerState<TaskForm> {
                 const SizedBox(height:50),
                 IconButton(
                   icon: const Icon(Icons.alarm_on), 
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => const ReminderForm()
-                  )),
+                  onPressed: () async { 
+                    Reminder? result = await Navigator.push<Reminder>(context, MaterialPageRoute(
+                      builder: (context) => ReminderForm(reminder),
+                    ));
+                    if (result != null) {
+                      setState(() {
+                        reminder = result;
+                      });
+                    }
+                  },
                   iconSize: 35,
                 ),
                 const SizedBox(height:30),
