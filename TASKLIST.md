@@ -94,28 +94,27 @@ git checkout -b feature/YourFeatureName
     - ~~Password reset option.~~
 - ~~Firebase Integration: Use Firebase Authentication.~~
 
-### 3. Home/Dashboard Screen
-- Features:
+### 3. ~~Home/Dashboard Screen~~
+- ~~Features:~~
     - ~~Display a list of tasks.~~
     - ~~Options to view, edit, or delete existing tasks.~~
     - ~~Button to add a new task.~~
-- Firebase Integration: Retrieve tasks from Firestore.
+- ~~Firebase Integration: Retrieve tasks from Firestore.~~
 
 ### 4. Task Creation/Editing Screen
 - Features:
     - ~~Form to enter/edit task details (title, description, due date, priority).~~
     - Option to set a reminder.
-- Firebase Integration: Add or update tasks in Firestore.
+- ~~Firebase Integration: Add or update tasks in Firestore.~~
 
 ### 5. Reminder Setup Screen
-
 - Features:
     - Select date and time for the reminder.
     - Option to repeat the reminder (e.g., daily, weekly).
 - Local Notifications: Implement local notifications for reminders.
 
-### 6. Profile Screen
-- Features:
+### 6. ~~Profile Screen~~
+- ~~Features:~~
     - ~~Display user information.~~
     - ~~Option to log out.~~
 - ~~Firebase Integration: Manage user session.~~
