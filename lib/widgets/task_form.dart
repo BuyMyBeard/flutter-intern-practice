@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
+import 'package:task_manager/globals.dart';
 import 'package:task_manager/providers/database.dart';
 import 'package:task_manager/providers/form_data.dart';
 import 'package:task_manager/providers/task.dart';
 import 'package:task_manager/widgets/reminder.dart';
+import 'package:timezone/timezone.dart' as tz;
+
 enum TaskAction { add, edit }
 
 /// Task Form to add or edit a task.
@@ -152,7 +157,34 @@ class _TaskFormState extends ConsumerState<TaskForm> {
       // ref.read(taskListProvider.notifier).editTask(task);
       ref.read(databaseProvider).editTask(task);
     }
+
+    if (reminder != null) {
+      _scheduleNotification();
+    }
+
     Navigator.pop(context);
+  }
+
+  _scheduleNotification() async {
+    NotificationDetails details = const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'your channel id', 
+        'your channel name',
+        channelDescription: 'your channel description'
+      )
+    );
+
+    localNotifications.zonedSchedule(
+      1, 
+      'Reminder', 
+      _titleController.text, 
+      tz.TZDateTime.from(reminder!.dateTime, tz.getLocation('America/New_York')),
+      details,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+    ).onError((error, stackTrace) {
+      Logger().e(error);
+    }).then((value) => Logger().i('successful'));
   }
 }
 

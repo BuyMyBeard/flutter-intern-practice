@@ -6,11 +6,16 @@ typedef DateChangedCallback = Function(DateTime date);
 typedef RepeatChangedCallback = Function(Repeat? repeat);
 
 class Reminder {
-  final DateTime date;
-  final TimeOfDay time;
+
+  DateTime get date => DateTime(dateTime.year, dateTime.month, dateTime.day);
+  TimeOfDay get time => TimeOfDay.fromDateTime(dateTime);
+
+  late DateTime dateTime;
   final Repeat repeat;
 
-  const Reminder(this.date, this.time, this.repeat);
+  Reminder(DateTime date, TimeOfDay time, this.repeat) {
+    dateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  }
 }
 
 class ReminderForm extends StatefulWidget {

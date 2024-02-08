@@ -8,6 +8,7 @@ import 'package:task_manager/constants/color_palette.dart' as colors;
 import 'package:task_manager/widgets/task_form.dart';
 import 'package:task_manager/widgets/task_info.dart';
 
+
 class TaskScreen extends ConsumerWidget {
   const TaskScreen({super.key});
 
